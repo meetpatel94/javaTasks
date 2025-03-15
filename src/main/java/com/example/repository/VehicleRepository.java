@@ -14,4 +14,7 @@ public interface VehicleRepository extends JpaRepository<VehicleEntity, Integer>
 
 	@Query(value="select v.* , u.first_name , u.last_name from users u , vehicles v where v.user_id = u.user_id",nativeQuery = true)
 	List<Object[]> getAll();
+	
+	@Query(value = "select v.* , u.first_name , u.last_name from users u , vehicles v where v.user_id = u.user_id and v.vehicle_id = :vehicleId", nativeQuery = true)
+	List<Object[]> getByVehicleId(Integer vehicleId);
 }

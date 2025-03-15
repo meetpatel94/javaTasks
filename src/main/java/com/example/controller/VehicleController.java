@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,5 +45,50 @@ public class VehicleController {
 		List<Object[]> listVehicle = repositoryVehicle.getAll();
 		model.addAttribute("allVehicle", listVehicle);
 		return "ListVehicle";
+	}
+	
+	@GetMapping("viewvehicle")
+	public String vehicle(Integer vehicleId,Model model) {
+		List<Object[]> op = repositoryVehicle.getByVehicleId(vehicleId);
+			
+	    model.addAttribute("vehicle", op);
+	    return "ViewVehicle";		
+	}
+	
+	@GetMapping("editvehicle")
+	public String editvehicle(Integer vehicleId,Model model) {
+		
+		Optional<VehicleEntity> op = repositoryVehicle.findById(vehicleId);
+		if(op.isEmpty()) {
+			return "redirect:/listvehicle";
+			
+		}else {
+			model.addAttribute("vehicle", op.get());
+			return "EditVehicle";
+		}	
+	}
+	
+//	case:1 when save -> entity -> no id present -> insert
+//  case:2 when save -> entity -> id present -> not present in database -> insert
+//  case:3 when save -> entity -> id present -> present in database -> update
+	
+	@PostMapping("updatevehicle")
+	public String updatevehicle(VehicleEntity entity) {
+		System.out.println(entity.getVehicleId());
+		
+		
+		Optional<VehicleEntity> op = repositoryVehicle.findById(entity.getVehicleId());
+		
+		if(op.isPresent()) {
+			
+			VehicleEntity dbvehicle = op.get();
+			
+			dbvehicle.setParkingCode(entity.getParkingCode());
+			dbvehicle.setVehicleType(entity.getVehicleType());
+			dbvehicle.setVehicleNo(entity.getVehicleNo());
+			repositoryVehicle.save(entity);
+		}
+		
+		return "redirect:/listvehicle";
 	}
 }

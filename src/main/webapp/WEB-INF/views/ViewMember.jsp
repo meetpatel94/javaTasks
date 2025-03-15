@@ -19,13 +19,12 @@
        <th>MemberName<th>
        <th>Age<th>
        <th>ProfilePhoto<th>
-       <th>HouseId<th>
+
      </tr>
      <tr>
        <td>${member.memberName }<td>
        <td>${member.age }<td>
        <td>${member.profilePhoto }<td>
-       <td>${member.houseId }<td>
      </tr>
   </table>
   
